@@ -1,0 +1,40 @@
+GET /ex5/party/_mapping?pretty
+
+POST /ex5/party/_search
+{
+"query": {
+"nested": {
+"path": "addresses",
+"query": {
+"match": {
+"addresses.street": "Marszałkowska"
+}
+}
+}
+}
+}
+
+POST /ex5/party/_search
+{
+"query": {
+"nested": {
+"path": "addresses",
+"query": {
+"bool": {
+"must": [
+{
+"match": {
+"addresses.street": "Marszałkowska"
+}
+},
+{
+"match": {
+"addresses.city": "Gdynia"
+}
+}
+]
+}
+}
+}
+}
+}

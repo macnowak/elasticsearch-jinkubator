@@ -1,0 +1,24 @@
+{
+    "mappings": {
+      "party": {
+        "properties": {
+          "birthDate": {
+            "type": "date",
+            "format": "strict_date_optional_time||epoch_millis"
+          },
+          "firstName": {
+            "type": "text"
+          },
+          "label": {
+            "type": "text"
+          },
+          "name": {
+            "type": "keyword"
+          },
+          "partyId": {
+            "type": "long"
+          }
+        }
+      }
+    }
+}

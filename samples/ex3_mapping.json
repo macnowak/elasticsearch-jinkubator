@@ -1,0 +1,65 @@
+{
+  "mappings": {
+    "party": {
+      "properties": {
+        "birthDate": {
+          "type": "date",
+          "format": "strict_date_optional_time||epoch_millis"
+        },
+        "firstName": {
+          "type": "text"
+        },
+        "label": {
+          "type": "text"
+        },
+        "name": {
+          "type": "text",
+          "fields": {
+            "autocomplete": {
+              "type": "text",
+              "analyzer": "autocomplete_analyzer",
+              "search_analyzer": "search_analyzer"
+            }
+          }
+        },
+        "partyId": {
+          "type": "long"
+        }
+      }
+    }
+  },
+  "settings": {
+    "index": {
+      "analysis": {
+        "filter": {
+          "nGramFilter": {
+            "type": "nGram",
+            "min_gram": 3,
+            "max_gram": 40,
+            "token_chars": [
+              "letter",
+              "digit"
+            ]
+          }
+        },
+        "analyzer": {
+          "search_analyzer": {
+            "type": "custom",
+            "tokenizer": "keyword",
+            "filter": [
+              "lowercase"
+            ]
+          },
+          "autocomplete_analyzer": {
+            "type": "custom",
+            "tokenizer": "standard",
+            "filter": [
+              "lowercase",
+              "nGramFilter"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,30 @@
+GET /ex4/party/_search
+
+POST /ex4/party/_search
+{
+  "query": {
+    "match": {
+      "addresses.street": "Marszałkowska"
+    }
+  }
+}
+
+POST /ex4/party/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "match": {
+            "addresses.street": "Marszałkowska"
+          }
+        },
+        {
+          "match": {
+            "addresses.city": "Gdynia"
+          }
+        }
+      ]
+    }
+  }
+}

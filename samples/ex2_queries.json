@@ -1,0 +1,11 @@
+GET /ex2/party/_mapping?pretty
+
+
+POST /ex2/party/_search
+{
+  "query": {
+    "match": {
+      "name": "Nowak-Kowalski"
+    }
+  }
+}

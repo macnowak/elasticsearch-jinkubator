@@ -1,0 +1,1204 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="description" content="Elastisearch for beginners">
+	<meta name="author" content="Maciej Nowak">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<title>reveal.js</title>
+
+	<link rel="stylesheet" href="css/reveal.css">
+	<link rel="stylesheet" href="css/theme/white-custom.css">
+
+	<!-- Theme used for syntax highlighting of code -->
+	<link rel="stylesheet" href="lib/css/github.css">
+
+	<!-- Printing and PDF exports -->
+	<script>
+		var link = document.createElement('link');
+		link.rel = 'stylesheet';
+		link.type = 'text/css';
+		link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+		document.getElementsByTagName('head')[0].appendChild(link);
+	</script>
+</head>
+<body>
+<a style="display: block;" href="https://www.decerto.pl">
+	<img style="position: absolute; top: 0; right: 1; border: 0; width: 20%; height: 10%; margin: 4% 5%"
+		 src="http://www.decerto.pl/assets/base/img/layout/logos/logo-decerto-big2.png" alt="www.decerto.pl">
+</a>
+<div class="reveal">
+	<div class="slides">
+			<section class="intro">
+				<h1>Elasticsearch</h1>
+				<p>dla początkujących</p>
+				<br>
+				<p>Maciej Nowak</p>
+				<h6>15-05-2018</h6>
+			</section>
+		<section>
+			<h4>About</h4>
+			<br/>
+			<br/>
+			<p>Java developer @ Decerto</p>
+
+			<p><a target="_new" href="https://github.com/macnowak">https://github.com/macnowak</a></p>
+			<I>maciej.nowak@outlook.com</I>
+			<br/>
+		</section>
+		<section>
+			<h3>What will you learn</h3>
+			<ul>
+				<li class="fragment">What is Elastic?</li>
+				<li class="fragment">Installation</li>
+				<li class="fragment">API</li>
+				<li class="fragment">Indexing</li>
+				<li class="fragment">Searching</li>
+				<li class="fragment">Mapping</li>
+				<li class="fragment">Tools</li>
+			</ul>
+			<aside class="notes">
+				1. Czym jest elastic <br/>
+				2. Jak go zainstalować<br/>
+				3. Jak z nim rozmawiać<br/>
+				4. W jaki sposób indeksujemy dane<br/>
+				5. Jak szukamy<br/>
+				6. Czym jest mappowanie danych<br/>
+				7. Narzędzia<br/>
+			</aside>
+		</section>
+		<section>
+			<img src="img/ELK.png" class="plain">
+		</section>
+		<section>
+			<img src="img/app_elastic.png" class="plain">
+		</section>
+		<section>
+			<h3>History</h3>
+			<p>Shay Banon</p>
+			<p>Abstraction layer for Apache Lucene</p>
+			<p>First version was called Compass</p>
+			<p>First public release came out in February 2010</p>
+			<p>Open source from the beginning</p>
+			<p>1K contributors now</p>
+			<aside class="notes">
+				Lucyna jest tylko biblioteką. <br/>
+				De facto stoi za elasticiem
+			</aside>
+		</section>
+		<section>
+			<h3>Elasticsearch is...</h3>
+			<ul>
+				<li class="fragment">Open source</li>
+				<li class="fragment">Aims to make full-text search easy</li>
+				<li class="fragment">NoSql DB</li>
+				<li class="fragment">Analytics engine</li>
+				<li class="fragment">Java</li>
+				<li class="fragment">Apache Lucene</li>
+				<li class="fragment">Inverted indexes</li>
+				<li class="fragment">Distributed</li>
+				<li class="fragment">Scalable</li>
+				<li class="fragment">REST api</li>
+				<li class="fragment">Schema Free*!</li>
+				<li class="fragment">High Availability</li>
+				<li class="fragment">Near Real Time</li>
+			</ul>
+			<aside class="notes">
+				Full-text search engine <br/>
+				Baza NoSql<br/>
+				Potrafi analizować dane <br/>
+				Jest napisany w Javie<br/>
+				Powstał jako nakładka na Apache Lucene<br/>
+				Oparty na indeksach<br/>
+				Rozproszony z natury<br/>
+				Skalowalny<br/>
+				Dogadujemy się po restach<br/>
+				Nie potrzebujemy opisywać struktury danych <br/>
+				Jak dobrze skonfigurujemy klaster mamy HA :) <br/>
+				Near Real Time -> prawie brak opóźnienia pomiędzy zaindeksowaniem danych a możliwośćią wyszukiwania  <br/>
+			</aside>
+		</section>
+		<section>
+			<h3>Instalation</h3>
+			<br/>
+			<pre><code class="bash hljs" data-trim data-noescape>
+				//download
+				https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.6.9.zip
+
+				//unzip
+
+				//run
+				$ bin/elasticsearch
+			</code></pre>
+		</section>
+		<section>
+			<h3>It's alive!!!</h3>
+			<br/>
+			<pre><code class="hljs bash" data-trim data-noescape>$ curl -XGET http://localhost:9200</code></pre>
+			<pre class="fragment" data-fragment-index="2"><code class="json hljs" data-noescape>{
+  "name" : "elasticsearch",
+  "cluster_name" : "docker-cluster",
+  "cluster_uuid" : "gSjeSDoXS62BTssMMj9OBg",
+  "version" : {
+    "number" : "5.6.9",
+    "build_hash" : "877a590",
+    "build_date" : "2018-04-12T16:25:14.838Z",
+    "build_snapshot" : false,
+    "lucene_version" : "6.6.1"
+  },
+  "tagline" : "You Know, for Search"
+}</code></pre>
+		</section>
+		<section>
+			<h3>How do we talk to elastic</h3>
+			<br/>
+			<pre>
+$ curl -X <span class="fragment" data-fragment-index="1">&lt;VERB&gt;</span><span class="fragment"
+																				  data-fragment-index="2">&lt;PROTOCOL&gt;://</span><span
+					class="fragment" data-fragment-index="3">&lt;HOST&gt;</span><span class="fragment"
+																					  data-fragment-index="4">:&lt;PORT&gt;</span><span
+					class="fragment" data-fragment-index="5">/&lt;PATH&gt;</span><span class="fragment"
+																					   data-fragment-index="6">?&lt;QUERY_STRING&gt;</span><span
+					class="fragment" data-fragment-index="7"> -d &lt;BODY&gt;</span></pre>
+			<br/>
+			<pre>
+<span class="fragment" data-fragment-index="1">VERB -> GET, POST, PUT, DELETE...</span>
+<span class="fragment" data-fragment-index="2">PROTOCOL -> http / https</span>
+<span class="fragment" data-fragment-index="3">HOST -> node host</span>
+<span class="fragment" data-fragment-index="4">PORT -> 9200 http api</span>
+<span class="fragment" data-fragment-index="5">PATH -> api endpoint eg. /_cat /_plugin</span>
+<span class="fragment" data-fragment-index="6">QUERY_STRING -> optional ?pretty</span>
+<span class="fragment" data-fragment-index="7">BODY -> json</span>
+			</pre>
+		</section>
+
+		<section>
+			<h3>Basics</h3>
+		</section>
+		<section>
+			<h3>What is data?</h3>
+			<pre><code class="json hljs" data-trim data-noescape>
+{
+    "partyId": 1,
+    "firstName": "Jan",
+    "name": "Kowalski",
+    "label": "Jan Kowalski",
+    "birthDate": "2015-01-04"
+}
+	</code></pre>
+		</section>
+			<section>
+				<h3>Write some data</h3>
+				<pre class="fragment" data-fragment-index="1"><code class="json hljs" data-trim data-noescape>
+$ curl -XPUT localhost:9200/party/party/1?pretty -d ‘{
+  "partyId": 1,
+  "firstName": "Jan",
+  "name": "Kowalski",
+  "label": "Jan Kowalski",
+  "birthDate": "2015-01-04"
+}’				</code></pre>
+				<pre class="fragment" data-fragment-index="2"><code class="json hljs" data-noescape>{
+  "_index": "party",
+  "_type": "party",
+  "_id": "1",
+  "_version": 1,
+  "_shards": {
+    "total": 2,
+    "successful": 2,
+    "failed": 0
+  },
+  "created": true
+}</code></pre>
+
+
+
+			</section>
+			<section>
+				<h3>Read data</h3>
+				<pre class="fragment" data-fragment-index="1"><code>$ curl -XGET localhost:9200/party/party/1?pretty</code></pre>
+				<pre class="fragment" data-fragment-index="2"><code class="json hljs" data-noescape>{
+  "_index": "party",
+  "_type": "party",
+  "_id": "1",
+  "_score": 1,
+  "_source": {
+    "partyId": 1,
+    "firstName": "Jan",
+    "name": "Kowalski",
+    "label": "Jan Kowalski",
+    "birthDate": "2015-01-04"
+  }
+}</code></pre>
+			</section>
+			<section>
+				<h3>Change data</h3>
+				<pre class="fragment" data-fragment-index="1"><code class="json hljs" data-trim data-noescape>
+$ curl -XPUT localhost:9200/party/party/1?pretty -d ‘{
+  "partyId": 1,
+  "firstName": "Jan",
+  "name": "Nowak",
+  "label": "Jan Nowak",
+  "birthDate": "2015-01-04"
+}’</code></pre>
+				<pre class="fragment" data-fragment-index="2"><code class="json hljs" data-noescape>{
+  "_index": "party",
+  "_type": "party",
+  "_id": "1",
+  <b>"_version": 2</b>,
+  "_shards": {
+    "total": 2,
+    "successful": 1,
+    "failed": 0
+  },
+  "created": false
+}</code></pre>
+				<div class="fragment">UPDATE = atomic DELETE + PUT</div>
+				<aside class="notes">
+					Pod spodem to jest usuwanie i dodawanie nowego dokumentu
+				</aside>
+			</section>
+			<section>
+				<h3>Change something more</h3>
+				<pre class="fragment" data-fragment-index="1"><code class="json hljs" data-trim data-noescape>
+$ curl -XPUT localhost:9200/party/party/1?version=1?pretty -d ‘{
+  "partyId": 1,
+  "firstName": "Jan",
+  "name": "Zieliński",
+  "label": "Jan Zieliński",
+  "birthDate": "2015-01-04"
+}’</code></pre>
+<pre class="fragment" data-fragment-index="2"><code class="json hljs" data-trim data-noescape>{
+  "error": {
+    "root_cause": [...],
+    "type": "version_conflict_engine_exception",
+    "reason": "[party][1]: version conflict, current [2], provided [1]",
+    "index": "party",
+    "shard": "3"
+  },
+  <b>"status": 409   ← http 409 conflict </b>
+}
+</code></pre>
+				<div class="fragment">Version → optimistic locking</div>
+				<aside class="notes">
+					Optimistic locking !
+				</aside>
+			</section>
+			<section>
+				<h3>Clean it up...</h3>
+				<pre class="fragment" data-fragment-index="1"> Document <code class="hljs" data-trim data-noescape>$ curl -XDELETE localhost:9200/party/party/1?pretty </code></pre>
+				<pre class="fragment" data-fragment-index="2"> Type <code class="hljs" data-trim data-noescape>$ curl -XDELETE localhost:9200/party/party?pretty </code></pre>
+				<pre class="fragment" data-fragment-index="3"> Index <code class="hljs" data-trim data-noescape>$ curl -XDELETE localhost:9200/party?pretty </code></pre>
+				<span class="fragment" data-fragment-index="4"> Delete → marks document as deleted → delete in background</span>
+				<aside class="notes">
+					Delete odbywa się asynchronicznie w tle
+				</aside>
+			</section>
+
+
+
+		<!--About indicies-->
+			<section>
+				<h3>What is index ?</h3>
+				<aside class="notes">
+
+				</aside>
+			</section>
+			<section>
+				<h3>Some say...</h3>
+				<table>
+					<thead>
+					<tr>
+						<th>Elastic</th>
+						<th>RDMS</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr>
+						<td>Index</td>
+						<td>DB</td>
+					</tr>
+					<tr>
+						<td>Type</td>
+						<td>Table</td>
+					</tr>
+					<tr>
+						<td>Document</td>
+						<td>Row</td>
+					</tr>
+					</tbody>
+				</table>
+				<aside class="notes">
+KIEDYŚ w dokumentacji istniało porównanie do relacyjnych baz danych
+				</aside>
+			</section>
+			<section>
+				<h3>But...</h3>
+				<blockquote cite="https://www.elastic.co/blog/index-vs-type" >
+					"<b>In the past </b> we tried to make elasticsearch <b>easier to understand</b> by building an
+					analogy with relational
+					databases: indices would be like a database, and types like a table in a database. <b>This was a
+					mistake:</b>
+					the way data is stored is so different that any comparisons can hardly make sense, and this
+					ultimately
+					led to an overuse of types in cases where they were more harmful than helpful."
+				</blockquote>
+				<small><a>https://www.elastic.co/blog/index-vs-type</a></small>
+				<aside class="notes">
+
+					Po jakimś czasie zrezygnowali z porównań <br/>
+					Nie miały one sensu
+
+				</aside>
+			</section>
+			<section>
+				<h3>Index</h3>
+				<p class="fragment">An index is a collection of documents that have somewhat similar characteristics.</p>
+				<p class="fragment">An index is stored in a set of shards, which are themselves Lucene indices.</p>
+				<p class="fragment">Each shard is searched independently.</p>
+				<p class="fragment">Each shard may have it's replica</p>
+				<p class="fragment">Elasticsearch eventually needs to merge results from all the searched shards.</p>
+				<p class="fragment">10 indices that have 5 shards each, 50 results need to be merged.</p>
+				<aside class="notes">
+					1. Index to zbiór podobnych do siebie dokumentów  <br/>
+					2. Każdy indeks składa się z shardów -> które są indeksami w rozumieniu Lucene  <br/>
+					3. Każdy shard jest przeszukiwany niezależnie  <br/>
+					4. Wyniki wyszukiwania są mergowane  <br/>
+				</aside>
+			</section>
+			<section>
+				<h3>What is shard?</h3>
+				<p class="fragment">Shard is a box…</p>
+				<p class="fragment">Each shard is in itself a fully-functional and independent "index" that can be hosted on any node in the cluster.</p>
+				<aside class="notes">
+					Najprościej Shard = pudełko na dane <br/>
+					Każdy shard jest przeszukiwany niezależnie, i może znajdować sie na innym węźle klastra <br/>
+
+				</aside>
+			</section>
+			<section>
+				<h3>Sharding</h3>
+				<p class="fragment">Allows to horizontally split/scale your content volume</p>
+				<p class="fragment">Allows you to distribute and parallelize operations across shards / nodes → increasing performance</p>
+				<aside class="notes">
+					Z pojęciem shardu wchodzi pojęcie shardingu  <br/>
+
+					dzięki shardingowi -> czyli dzieleniu danych na shardy możemy skalować się horyzontalnie  <br/>
+					co pozwala na zwiększenie wydajnosci bo można zrównoleglać operacje  <br/>
+				</aside>
+			</section>
+			<section>
+				<h3>What is replica?</h3>
+				<p class="fragment">It's a copy of shard</p>
+				<p class="fragment">Replica shard is never allocated on the same node as the original/primary shard.</p>
+				<aside class="notes">
+					Repliki nigdy nie leżą w tym samym miejscu co dane  <br/>
+				</aside>
+			</section>
+			<section>
+				<h3>Replication</h3>
+				<p class="fragment">Provides high availability in case a shard/node fails.</p>
+				<p class="fragment">Allows to scale out your search volume/throughput since searches can be executed on all replicas in 	parallel.</p>
+				<aside class="notes">
+					Skoro shard -> sharding  <br/>
+					to replica -> replication  <br/>
+
+					Dzięki mechanizmowi replik możemy zapewnić HA  <br/>
+					Repliki nigdy nie leżą w tym samym miejscu co dane  <br/>
+					Wyszukiwanie może odbywać się na replikach -> zwiększamy wydajność <br/>
+				</aside>
+			</section>
+			<section>
+				<p>Index = Shards + Replicas</p>
+				<aside class="notes">
+					Każdy indeks składa się z takich pudełek + replik tych pudełek
+				</aside>
+			</section>
+			<section>
+				<h3>Index configuration</h3>
+				<pre class="fragment" data-fragment-index="2"><code class="json bash" data-trim data-noescape>
+$ curl -XPUT localhost:9200/party -d '{
+  "settings": {
+	"index": {
+	  "number_of_replicas": "1",
+	  "number_of_shards": "5"
+	}
+  }
+}'
+</code></pre>
+			</section>
+			<section>
+				<h3>Type</h3>
+				<p class="fragment">Types are a convenient way to store several types of data in the same index.</p>
+				<p class="fragment">Lower total number of indices</p>
+				<p class="fragment">“_type” field on every document</p>
+				<aside class="notes">
+					1. Typy są sposobem na trzymanie różnych TYPÓW dokumentów w jednym indeksie  <br/>
+					2. Pozwalają na zmniejszenie liczby indeksów  <br/>
+					3. Technicznie to jest tylko meta pole na dokumencie  <br/>
+				</aside>
+			</section>
+			<section>
+				<p class="fragment">One index with many types ?</p>
+				<p class="fragment">OR</p>
+				<p class="fragment">Many indices with one type ?</p>
+				<aside class="notes">
+					Więc standardowe pytanie na początek?
+					Jeden index z wieloma typami?
+					Czy
+					Wiele indeksów z jednym typem?
+				</aside>
+			</section>
+			<section>
+				<h3>It depends…</h3>
+				<ul>
+					<li>Documentations says : Do your documents have similar mappings? If no, use different indices.
+					</li>
+					<li>Stackoverflow says :
+						<a>http://stackoverflow.com/questions/14465668/elastic-search-multiple-indexes-vs-one-index-and-types-for-different-data-sets</a>
+					</li>
+				</ul>
+				<aside class="notes">
+					To zależy... <br/>
+
+					Na stack analiza czy dane są duże, małe, jak wyszukujemy i itp łącznie z tym czy mamy dużo czy mało Ramu
+				</aside>
+			</section>
+			<section>
+				<h3>Problem solved</h3>
+				<p>Since elastic 5.6:  Type is deprecated...</p>
+				<p><small><a>https://www.elastic.co/guide/en/elasticsearch/reference/master/removal-of-types.html</a></small></p>
+				<aside class="notes">
+					Od wersji 5.6 typy stają się deprecated <br/>
+					Całkowite usunięcie chyba od wersji 9.x
+
+				</aside>
+			</section>
+
+		<section>
+			<span>Elastic</span>
+			<span class="fragment fade-up"><b>Search</b></span>
+			<aside class="notes">
+				No to mniej więcej wiemy co oznacza elastic  <br/>
+				Porozmawiamy teraz o tym co znaczy search
+			</aside>
+		</section>
+		<!--About search-->
+
+			<section>
+				<h3>Basic tools</h3>
+				<ul>
+					<li class="fragment">Kibana</li>
+					<li class="fragment">Dev Tools (Sense)</li>
+				</ul>
+			</section>
+
+			<section>
+				<h3>How to search</h3>
+				<pre class="fragment" data-fragment-index="1"><code class="hljs" data-trim data-noescape>$ curl -XGET localhost:9200/party/party/_search </code></pre>
+				<pre class="fragment" data-fragment-index="2"><code class="hljs" data-trim data-noescape>$ curl -XGET localhost:9200/party/_search</code></pre>
+				<pre class="fragment" data-fragment-index="3"><code class="hljs" data-trim data-noescape>$ curl -XGET localhost:9200/p*/_search</code></pre>
+				<pre class="fragment" data-fragment-index="4"><code class="hljs" data-trim data-noescape>$ curl -XGET localhost:9200/p*/type1,type2/_search</code></pre>
+				<aside class="notes">
+					Szukamy po typach  <br/>
+					Szukamy w całym indeksie <br/>
+					Szukamy we wszystkich indeksach na p <br/>
+					Bardziej kosmate ...
+				</aside>
+			</section>
+			<section>
+				<pre><code class="hljs" data-trim data-noescape>$ curl -XGET localhost:9200/party/party/_search </code></pre>
+				<pre class="fragment"><code style="max-height: 600px" class="json hljs" data-trim data-noescape>
+{
+  "took" : 6,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 5,
+    "successful" : 5,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : 1,
+    "max_score" : 1.0,
+    "hits" : [ {
+      "_index" : "party",
+      "_type" : "party",
+      "_id" : "1",
+      <b>"_score" : 1.0,</b>
+      "_source" : {
+        "partyId" : 1,
+        "firstName" : "Jan",
+        "name" : "Nowak",
+        "label" : "Jan Nowak",
+        "birthDate" : "2015-01-04"
+      }
+    } ]
+  }
+}</code></pre>
+				<aside class="notes">
+					Nagłówek <br/>
+					Dane <br/>
+
+					Score ! <br/>
+
+				</aside>
+			</section>
+			<section>
+				<h3>What is score?</h3>
+				<p class="fragment" data-fragment-index="1">_score → how returned document is relevant to query</p>
+				<p class="fragment" data-fragment-index="2">_score is based on term frequency, inverse document frequency, and field-length norm</p>
+				<p class="fragment" data-fragment-index="2"><small><a>https://www.elastic.co/guide/en/elasticsearch/guide/current/relevance-intro.html</a></small></p>
+				<aside class="notes">
+					Score mówi jak bardzo zwrócony dokument pasuje do zapytania <br/>
+					Matematyka...
+				</aside>
+			</section>
+		<section>
+			<h3>Query syntax</h3>
+			<p class="fragment" data-fragment-index="1">URI Search</p>
+			<pre class="fragment" data-fragment-index="1"><code class="hljs bash" data-trim data-noescape>
+$ curl -XGET "http://localhost:9200/party/party/_search?q=name:Kowalski&pretty"
+			</code></pre>
+			<p class="fragment" data-fragment-index="2">Request Body Search</p>
+			<pre class="fragment" data-fragment-index="2"><code class="hljs bash" data-trim data-noescape>
+$ curl -XPOST "http://localhost:9200/party/party/_search" -d
+'{
+ "query": {
+    "match": {
+      "name": "Kowalski"
+    }
+  }
+}' </code></pre>
+		</section>
+			<section>
+
+				DEMO 1
+
+				<aside class="notes">
+
+					Pokazujemy defaultowe zachowanie elastica bez mapowania. <br/>
+					Dzieli wyniki na termy i zwraca za dużo wyników<br/>
+					Walkiewicz  -1<br/>
+					Zaleska-barczewska -1<br/>
+					Nowak -2<br/>
+					Kowalski -2<br/>
+					Nowak-Kowalski -4<br/>
+
+				</aside>
+			</section>
+
+			<section>
+				<img src="img/wtf.jpg" class="stretch plain">
+			</section>
+
+
+			<section><h3>How it works?</h3>
+				<p class="fragment fade-up">Full text search by default !</p>
+			</section>
+
+			<section>
+				<p>“The quick brown fox jumped over the lazy dog”</p>
+				<p>“Quick brown foxes leap over lazy dogs in summer”</p>
+
+				<aside class="notes">
+					Przykład z dokumentacji który dobrze pokazuje działanie elastica <br/>
+				</aside>
+			</section>
+
+			<section>
+				<h3>Separate words / terms</h3>
+
+				<p>The,quick,brown,fox,jumped,over,the,lazy,dog</p>
+				<p>Quick,brown,foxes,leap,over,lazy,dogs,in,summer</p>
+				<aside class="notes">
+Dzielimy słowa ( termy )
+				</aside>
+			</section>
+
+			<section>
+				<h3>Sort terms</h3>
+				<p>The,brown,dog,fox,jumped,lazy,over,quick,the</p>
+				<p>Quick,brown,dogs,foxes,in,lazy,leap,over,summer</p>
+				<aside class="notes">
+Sortujemy
+				</aside>
+			</section>
+
+			<section>
+				<table style="font-size: 0.7em">
+					<thead>
+					<tr>
+						<th>Term</th>
+						<th>Document 1</th>
+						<th>Document 2</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr>
+						<td>Quick</td>
+						<td>X</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>The</td>
+						<td></td>
+						<td>X</td>
+					</tr>
+					<tr>
+						<td>brown</td>
+						<td>X</td>
+						<td>X</td>
+					</tr>
+					<tr>
+						<td>dog</td>
+						<td>X</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>dogs</td>
+						<td></td>
+						<td>X</td>
+					</tr>
+					<tr>
+						<td>fox</td>
+						<td>X</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>foxes</td>
+						<td></td>
+						<td>X</td>
+					</tr>
+					<tr>
+						<td>in</td>
+						<td></td>
+						<td>X</td>
+					</tr>
+					<tr>
+						<td>jumped</td>
+						<td>X</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>lazy</td>
+						<td>X</td>
+						<td>X</td>
+					</tr>
+					<tr>
+						<td>leap</td>
+						<td></td>
+						<td>X</td>
+					</tr>
+					<tr>
+						<td>over</td>
+						<td>X</td>
+						<td>X</td>
+					</tr>
+					<tr>
+						<td>quick</td>
+						<td></td>
+						<td>X</td>
+					</tr>
+					<tr>
+						<td>summer</td>
+						<td></td>
+						<td>X</td>
+					</tr>
+					<tr>
+						<td>the</td>
+						<td>X</td>
+						<td></td>
+					</tr>
+					</tbody>
+				</table>
+				<aside class="notes">
+					Tworzymy macież
+				</aside>
+			</section>
+			<section>
+				<table style="font-size: 0.7em">
+					<thead>
+					<tr>
+						<th>Term</th>
+						<th>Document 1</th>
+						<th>Document 2</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr>
+						<td>brown</td>
+						<td>X</td>
+						<td>X</td>
+					</tr>
+					<tr>
+						<td>dog</td>
+						<td>X</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>dogs</td>
+						<td></td>
+						<td>X</td>
+					</tr>
+					<tr>
+						<td>fox</td>
+						<td>X</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>foxes</td>
+						<td></td>
+						<td>X</td>
+					</tr>
+					<tr>
+						<td>in</td>
+						<td></td>
+						<td>X</td>
+					</tr>
+					<tr>
+						<td>jumped</td>
+						<td>X</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>lazy</td>
+						<td>X</td>
+						<td>X</td>
+					</tr>
+					<tr>
+						<td>leap</td>
+						<td></td>
+						<td>X</td>
+					</tr>
+					<tr>
+						<td>over</td>
+						<td>X</td>
+						<td>X</td>
+					</tr>
+					<tr>
+						<td>quick</td>
+						<td>X</td>
+						<td>X</td>
+					</tr>
+					<tr>
+						<td>summer</td>
+						<td></td>
+						<td>X</td>
+					</tr>
+					<tr>
+						<td>the</td>
+						<td>X</td>
+						<td>X</td>
+					</tr>
+					</tbody>
+				</table>
+				<aside class="notes">
+					usuwamy wielkie litery
+				</aside>
+			</section>
+			<section>
+				<table style="font-size: 0.7em">
+					<thead>
+					<tr>
+						<th>Term</th>
+						<th>Document 1</th>
+						<th>Document 2</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr>
+						<td>brown</td>
+						<td>X</td>
+						<td>X</td>
+					</tr>
+					<tr>
+						<td>dog</td>
+						<td>X</td>
+						<td>X</td>
+					</tr>
+					<tr>
+						<td>fox</td>
+						<td>X</td>
+						<td>X</td>
+					</tr>
+					<tr>
+						<td>in</td>
+						<td></td>
+						<td>X</td>
+					</tr>
+					<tr>
+						<td>jumped</td>
+						<td>X</td>
+						<td>X</td>
+					</tr>
+					<tr>
+						<td>lazy</td>
+						<td>X</td>
+						<td>X</td>
+					</tr>
+					<tr>
+						<td>over</td>
+						<td>X</td>
+						<td>X</td>
+					</tr>
+					<tr>
+						<td>quick</td>
+						<td>X</td>
+						<td>X</td>
+					</tr>
+					<tr>
+						<td>summer</td>
+						<td></td>
+						<td>X</td>
+					</tr>
+					<tr>
+						<td>the</td>
+						<td>X</td>
+						<td>X</td>
+					</tr>
+					</tbody>
+				</table>
+				<aside class="notes">
+					Łączymy wyrazy podobne
+				</aside>
+			</section>
+
+			<section>
+				<h3>"Analysis"</h3>
+				tokenization + normalization
+
+				<aside class="notes">
+Proces ten nazywamy analizą
+
+				</aside>
+			</section>
+			<section>
+				<h3>"Analyzers"</h3>
+				tokenizer + token filters
+				<aside class="notes">
+I jak można się domyślić jest wykonywany przez analizatory <br/>
+					Analizator składa się z czegoś co dzieli tekst na tokeny, oraz z tego co te tokeny filtruje
+				</aside>
+			</section>
+			<section>
+				<h3>standard analyzer</h3>
+				<p class="fragment"> standard tokenizer → The,Quick,Brown,Fox,jumped,over,the,Lazy,Dog</p>
+				<p class="fragment"> lowercase filter → the,quick,brown,fox,jumped,over,the,lazy,dog</p>
+				<p class="fragment"> stopwords filter → ,quick,brown,fox,jumped,over, ,lazy,dog</p>
+			</section>
+			<section>
+				<h3>Schema free??</h3>
+			</section>
+			<section>
+				<h3>Not exactly...</h3>
+			</section>
+
+			<!--MAPOWANIE -->
+
+			<section>
+				<h3>Mappings</h3>
+				<pre class="fragment" data-fragment-index="1"><code>$ curl -XGET localhost:9200/party/party/_mapping?pretty</code></pre>
+				<pre class="fragment" data-fragment-index="2"><code class="hljs" data-trim data-noescape>
+{
+    "mappings": {
+      "party": {
+        "properties": {
+          "birthDate": {
+            "type": "date",
+            "format": "strict_date_optional_time||epoch_millis"
+          },
+          "name": {
+            "type": "text"
+          },
+          "partyId": {
+            "type": "long"
+          }
+        }
+      }
+    }
+} </code></pre>
+				<aside class="notes">
+Domyślne mapowanie, <br/>
+				Elastic patrzy na dane i stara się sam dobrać odpowiednie typy danych <br/>
+				</aside>
+			</section>
+			<section>
+				<h3>Defined types</h3>
+				<table>
+					<tbody>
+					<tr>
+						<td>Strings</td>
+						<td>string (pre v5.0), text, keyword</td>
+					</tr>
+					<tr>
+						<td>Datetimes</td>
+						<td>date</td>
+					</tr>
+					<tr>
+						<td>Whole numbers</td>
+						<td>byte, short, integer, long</td>
+					</tr>
+					<tr>
+						<td>Floats</td>
+						<td>float, double</td>
+					</tr>
+					<tr>
+						<td>Booleans</td>
+						<td>boolean</td>
+					</tr>
+					<tr>
+						<td>Objects</td>
+						<td>object</td>
+					</tr>
+					<tr>
+						<td>Also</td>
+						<td>multi_field, ip, geo_point, geo_shape,</td>
+					</tr>
+					</tbody>
+				</table>
+			</section>
+			<section>
+
+				<table>
+					<thead>
+						<tr>
+							<th></th>
+							<th>v2.x</th>
+							<th>v5.x</th>
+							<th>v6.x</th>
+						</tr>
+					</thead>
+					<tbody>
+
+						<tr>
+							<td>Full text <br/>( default )</td>
+							<td><small>{"type":"string", "index":"<b>analyzed</b>"}</small></td>
+							<td><small>{"type":"string", "index":"<b>analyzed</b>"}<br/> <br/>{"type":"text"}</small></td>
+							<td><small>{"type":"text"}</small></td>
+						</tr>
+						<tr>
+							<td>Exact String</td>
+							<td><small>{"type":"string", "index":"<b>not_analyzed</b>"}</small></td>
+							<td><small>{"type":"string", "index":"<b>not_analyzed</b>"} <br/><br/>
+								{"type":"keyword"}</small></td>
+							<td><small>{"type":"keyword"}</small></td>
+
+						</tr>
+						<tr>
+							<td>Not searchable</td>
+							<td><small>{"type":"string", "index":"<b>no</b>"}</small></td>
+							<td><small>{"type":"string", "index":"<b>no</b>"} <br/> <br/> {"type":"text | keyword", "index":"<b>false</b>"}</small></td>
+							<td><small>{"type":"text | keyword", "index":"<b>false</b>"}</small></td>
+						</tr>
+					</tbody>
+
+				</table>
+				<aside class="notes">
+					Jeżeli chcemy wyszukiwać pełno tekstowo -> czyli z dzieleniem słów na tokeny i itp to analyzed <br/>
+					Jeżeli chcemy szukać konkretnego wyrazu to pole musi być not_analyzed <br/>
+					jeżęli nie chcemy wyszukiwać po jakimś polu to oznaczamy go jako no <br/>
+
+				</aside>
+			</section>
+			<section>
+				<h3>Add mapping</h3>
+				<pre><code class="hljs json" data-trim data-noescape>
+PUT /party/_mapping
+{
+    "mappings": {
+      "party": {
+        "properties": {
+          "birthDate": {
+            "type": "date",
+            "format": "strict_date_optional_time||epoch_millis"
+          },
+          "name": {
+            "type": "keyword"
+		  },
+          "partyId": {
+            "type": "long"
+          }
+        }
+      }
+    }
+} </code></pre>
+			</section>
+			<section>
+				<p>Can’t change the mapping !!</p>
+				<p>Can add new fields</p>
+			</section>
+			<section>
+				DEMO 2
+			</section>
+			<section>
+				Real life example?
+				<aside class="notes">
+					Po co jest nam to mapowanie?
+
+				</aside>
+			</section>
+			<section>
+				<h3>Autocomplete</h3>
+
+				<p class="fragment">N-grams == window-on-a-word:</p>
+
+				<p class="fragment">Jan Kowalski</p>
+
+				<p class="fragment">Length 1: j,a,n,k,o,w,a,l,s,k,i</p>
+				<p class="fragment">Length 2: ja,an,nk,ko,ow,wa,al,ls,ki</p>
+				<p class="fragment">Length 3: jan,ank,nko,kow,owa,wal,als,lsk,ski</p>
+				<p class="fragment">Length 4: jank,anko,nkow,kowa,owal,wals,alsk,lski</p>
+				<p class="fragment">...</p>
+			</section>
+			<section>
+				<h3>First define filter</h3>
+				<pre><code class="hljs" data-trim data-noescape>
+"filter": {
+          "nGramFilter": {
+            "type": "nGram",
+            "min_gram": 3,
+            "max_gram": 40
+          }
+        } </code></pre>
+			</section>
+			<section>
+				<h3>Second define analyzer</h3>
+
+				<pre><code class="hljs" data-trim data-noescape>
+ "analyzer": {
+          "search_analyzer": {
+            "type": "custom",
+            "tokenizer": "keyword",
+            "filter": [
+              "lowercase"
+            ]
+          },
+          "autocomplete_analyzer": {
+            "type": "custom",
+            "tokenizer": "whitespace",
+            "filter": [
+              "lowercase",
+              "nGramFilter"
+            ]
+          }
+        }</code></pre>
+			</section>
+			<section>
+				<h3>Third define field</h3>
+				<pre><code class="hljs" data-trim data-noescape>
+"name": {
+          "type": "text",
+          "analyzer": "standard_analyzer",
+          "fields": {
+            "autocomplete": {
+              "type": "text",
+              "analyzer": "autocomplete_analyzer", <-- handles data
+              "search_analyzer": "search_analyzer" <-- handles query
+            }
+          }
+        }</code></pre>
+			</section>
+			<section>
+				DEMO 3
+			</section>
+		<section>
+			<h3>When something is not working...</h3>
+
+			<pre><code class="hljs" data-trim data-noescape>GET /party/party/25/_termvector?fields=name.autocomplete</code></pre>
+			<pre><code class="hljs" data-trim data-noescape>GET /_analyze
+{
+"tokenizer": "keyword",
+"filter": ["lowercase"],
+"text" : "Nowak-kowa"
+}</code></pre>
+			<aside class="notes">
+				Kiedy chcemy sprawdzić czy coś nie działa:
+				1. Lista termów które są stworzone dla tego pola
+				2. Zastosowanie analizatora i filtra na konkretnym tekscie
+			</aside>
+		</section>
+			<section>
+				DEMO 4
+				<aside class="notes">
+					Pokazanie zachowania przy wyszukiwaniu po obiektach zagnieżdżonych
+					"addresses.street": "Marszałkowska" -> 2 results
+					"addresses.city": "Gdynia"  AND  “addresses.street": "Marszałkowska" → 2 results
+				</aside>
+			</section>
+			<section>
+				<h3>Arrays</h3>
+			</section>
+			<section>
+				<p>"addresses": {  "type":"object", …}</p>
+				<p class="fragment" data-fragment-index="1" >By default JSON document is flattened into a simple key-value format :</p>
+
+				<pre class="fragment" data-fragment-index="1" ><code class="hljs" data-trim>
+				addresses.street : [“Marszałkowska”,”Elektoralna” ]
+				addresses.city : [“Gdynia”,”Solec-Kujawski”]
+				</code></pre>
+				<aside class="notes">
+					Domyślnie pole addresses jest traktowane jako obiekt
+					więc wszystkie pola pod addressem są traktowane jako tablice wartości
+				</aside>
+			</section>
+			<section>
+				<h3>solution:</h3>
+				"addresses": {  "type":"nested", …}
+			</section>
+			<section>
+				DEMO 5
+				<aside class="notes">
+					Pokazanie poprawnego zachowania przy wyszukiwaniu po obiektach zagnieżdżonych
+					trzeba pamiętać aby dodać sekcję nested i w niej pokazać ścieżkę po której szukamy
+				</aside>
+			</section>
+
+		<section>
+			<h3>Monitoring</h3>
+			<ul>
+				<li class="fragment">Hq - <a href="https://github.com/ElasticHQ/elasticsearch-HQ">https://github.com/ElasticHQ/elasticsearch-HQ</a> </li>
+				<li class="fragment">Cerebro (Kopf) - <a href="https://github.com/lmenezes/cerebro">https://github.com/lmenezes/cerebro</a> </li>
+			</ul>
+		</section>
+		<section>
+			<h3>Just the tip of the iceberg...</h3>
+			<p class="fragment">Documentation : <a href="https://www.elastic.co/guide/index.html"> https://www.elastic.co/guide/index.html</a></p>
+		</section>
+		<section>
+			<h3>Questions?</h3>
+		</section>
+		<section>
+			<h3>Feedback</h3>
+			<I>maciej.nowak@outlook.com</I>
+		</section>
+	</div>
+</div>
+
+<script src="lib/js/head.min.js"></script>
+<script src="js/reveal.js"></script>
+
+<script>
+	// More info about config & dependencies:
+	// - https://github.com/hakimel/reveal.js#configuration
+	// - https://github.com/hakimel/reveal.js#dependencies
+	Reveal.initialize({
+		controls: true,
+		progress: true,
+		history: true,
+		center: true,
+		slideNumber: true,
+
+		dependencies: [
+			{src: 'plugin/markdown/marked.js'},
+			{src: 'plugin/markdown/markdown.js'},
+			{src: 'plugin/notes/notes.js', async: true},
+			{
+				src: 'plugin/highlight/highlight.js', async: true, callback: function () {
+				hljs.initHighlightingOnLoad();
+			}
+			}
+		]
+	});
+</script>
+</body>
+</html>

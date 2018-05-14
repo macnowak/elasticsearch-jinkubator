@@ -1,0 +1,50 @@
+{"index":{"_id": "1","_index": "ex1", "_type": "party" }}
+{ "partyId": 3,  "firstName": "Paweł",  "name": "Sonnenberg",  "label": "Paweł Sonnenberg", "birthDate": "2015-01-04" }
+{  "index": { "_id": "2",    "_index": "ex1",    "_type": "party"  }}
+{  "partyId": 6,  "firstName": "Jarosław",  "name": "Kazanowski",  "label": "Jarosław Kazanowski", "birthDate": "2015-01-07"}
+{  "index": { "_id": "3",    "_index": "ex1",    "_type": "party"  }}
+{  "partyId": 8,  "firstName": "Alina",  "name": "Zawrotna",  "label": "Alina Zawrotna", "birthDate": "2015-01-09"}
+{  "index": { "_id": "4",    "_index": "ex1",    "_type": "party"  }}
+{  "partyId": 10,  "firstName": "Ewelina",  "name": "Piereguda",  "label": "Ewelina Piereguda", "birthDate": "2015-01-11"}
+{  "index": { "_id": "5",    "_index": "ex1",    "_type": "party"  }}
+{  "partyId": 13,  "firstName": "Łukasz",  "name": "Witkowski",  "label": "Łukasz Witkowski", "birthDate": "2015-01-14"}
+{  "index": { "_id": "6",    "_index": "ex1",    "_type": "party"  }}
+{  "partyId": 18,  "firstName": "Marian",  "name": "Kowalski",  "label": "Marian Kowalski", "birthDate": "2015-01-19"}
+{  "index": { "_id": "7",    "_index": "ex1",    "_type": "party"  }}
+{  "partyId": 25,  "firstName": "ŻŻŻ",  "name": "ŻŻŻ BBB",  "label": "ŻŻŻ BBB", "birthDate": "2015-01-26"}
+{  "index": { "_id": "8",    "_index": "ex1",    "_type": "party"  }}
+{  "partyId": 7,  "firstName": "Natalia",  "name": "Walkiewicz",  "label": "Natalia Walkiewicz", "birthDate": "2015-01-08"}
+{  "index": { "_id": "9",    "_index": "ex1",    "_type": "party"  }}
+{  "partyId": 9,  "firstName": "JAROSŁAW",  "name": "Żybura",  "label": "JAROSŁAW Żybura", "birthDate": "2015-01-10"}
+{  "index": { "_id": "10",    "_index": "ex1",    "_type": "party"  }}
+{  "partyId": 20,  "firstName": "Bank",  "name": "PKO",  "label": "Bank PKO", "birthDate": "2015-01-21"}
+{  "index": { "_id": "11",    "_index": "ex1",    "_type": "party"  }}
+{  "partyId": 1,  "firstName": "SŁAWOMIR",  "name": "CHUDZICKI",  "label": "SŁAWOMIR CHUDZICKI", "birthDate": "2015-01-02"}
+{  "index": { "_id": "12",    "_index": "ex1",    "_type": "party"  }}
+{  "partyId": 2,  "firstName": "MAGDALENA",  "name": "Duniec",  "label": "MAGDALENA Duniec", "birthDate": "2015-01-03"}
+{  "index": { "_id": "13",    "_index": "ex1",    "_type": "party"  }}
+{  "partyId": 11,  "firstName": "Paweł",  "name": "Manowiec",  "label": "Paweł Manowiec", "birthDate": "2015-01-12"}
+{  "index": { "_id": "14",    "_index": "ex1",    "_type": "party"  }}
+{  "partyId": 14,  "firstName": "JERZY",  "name": "TYKA",  "label": "JERZY TYKA", "birthDate": "2015-01-15"}
+{  "index": { "_id": "15",    "_index": "ex1",    "_type": "party"  }}
+{  "partyId": 23,  "firstName": "AĄA",  "name": "AĄA BBB",  "label": "AĄA BBB", "birthDate": "2015-01-24"}
+{  "index": { "_id": "16",    "_index": "ex1",    "_type": "party"  }}
+{  "partyId": 4,  "firstName": "Marcin",  "name": "Nowak",  "label": "Marcin Nowak", "birthDate": "2015-01-05"}
+{  "index": { "_id": "17",    "_index": "ex1",    "_type": "party"  }}
+{  "partyId": 12,  "firstName": "Przemysław",  "name": "Cyranka",  "label": "Przemysław Cyranka", "birthDate": "2015-01-13"}
+{  "index": { "_id": "18",    "_index": "ex1",    "_type": "party"  }}
+{  "partyId": 16,  "firstName": "HENRYK",  "name": "Kaptur",  "label": "HENRYK Kaptur", "birthDate": "2015-01-17"}
+{  "index": { "_id": "19",    "_index": "ex1",    "_type": "party"  }}
+{  "partyId": 5,  "firstName": "Marcin",  "name": "Jabłonowski",  "label": "Marcin Jabłonowski", "birthDate": "2015-01-06"}
+{  "index": { "_id": "20",    "_index": "ex1",    "_type": "party"  }}
+{  "partyId": 15,  "firstName": "AGNIESZKA",  "name": "Zaleska-barczewska",  "label": "AGNIESZKA Zaleska-barczewska", "birthDate": "2015-01-16"}
+{  "index": { "_id": "21",    "_index": "ex1",    "_type": "party"  }}
+{  "partyId": 17,  "firstName": "Stanisław",  "name": "Bartnik",  "label": "Stanisław Bartnik", "birthDate": "2015-01-18"}
+{  "index": { "_id": "22",    "_index": "ex1",    "_type": "party"  }}
+{  "partyId": 19,  "firstName": "Jan",  "name": "Kowalski",  "label": "Jan Kowalski","birthDate": "2015-01-20"}
+{  "index": { "_id": "24",    "_index": "ex1",    "_type": "party"  }}
+{  "partyId": 22,  "firstName": "AAA",  "name": "AAA AAA",  "label": "AAA AAA", "birthDate": "2015-01-23"}
+{  "index": { "_id": "25",    "_index": "ex1",    "_type": "party"  }}
+{  "partyId": 24,  "firstName": "ZZZ",  "name": "ZZZ BBB",  "label": "ZZZ BBB", "birthDate": "2015-01-25"}
+{"index":{"_id": "25","_index": "ex1", "_type": "party" }}
+{ "partyId": 25,  "firstName": "Maciej",  "name": "Nowak-Kowalski",  "label": "Maciej Nowak-Kowalski", "birthDate": "2015-01-04"}

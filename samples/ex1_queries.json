@@ -1,0 +1,56 @@
+POST /ex1/party/_search
+{
+  "query": {
+    "match_all":{}
+  }
+}
+
+POST /ex1/party/_search
+{
+  "query": {
+    "match": {
+      "name": "Walkiewicz"
+    }
+  }
+}
+
+POST /ex1/party/_search
+{
+  "query": {
+    "match": {
+      "name": "Zaleska-barczewska"
+    }
+  }
+}
+
+POST /ex1/party/_search
+{
+  "query": {
+    "match": {
+      "name": "Nowak"
+    }
+  }
+}
+
+POST /ex1/party/_search
+{
+  "query": {
+    "match": {
+      "name": "Kowalski"
+    }
+  }
+}
+
+POST /ex1/party/_search
+{
+  "query": {
+    "match": {
+      "name": "Nowak-Kowalski"
+    }
+  }
+}
+
+
+GET /ex1/party/_mapping?pretty
+
+

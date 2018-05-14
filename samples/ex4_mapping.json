@@ -1,0 +1,81 @@
+{
+  "mappings": {
+    "party": {
+      "properties": {
+        "birthDate": {
+          "type": "date",
+          "format": "strict_date_optional_time||epoch_millis"
+        },
+        "firstName": {
+          "type": "text"
+        },
+        "label": {
+          "type": "text"
+        },
+        "name": {
+          "type": "text",
+          "fields": {
+            "autocomplete": {
+              "type": "text",
+              "analyzer": "autocomplete_analyzer",
+              "search_analyzer": "search_analyzer"
+            }
+          }
+        },
+        "partyId": {
+          "type": "long"
+        },
+        "addresses": {
+          "type":"object",
+          "properties": {
+            "street": {
+              "type": "text",
+              "index": "not_analyzed"
+            },
+            "houseNumber": {
+              "type": "text",
+              "index": "not_analyzed"
+            },
+            "doorNumber": {
+              "type": "text",
+              "index": "not_analyzed"
+            },
+            "city": {
+              "type": "text"
+            }
+          }
+        }
+      }
+    }
+  },
+  "settings": {
+    "index": {
+      "analysis": {
+        "filter": {
+          "nGramFilter": {
+            "type": "nGram",
+            "min_gram": 3,
+            "max_gram": 40
+          }
+        },
+        "analyzer": {
+          "search_analyzer": {
+            "type": "custom",
+            "tokenizer": "keyword",
+            "filter": [
+              "lowercase"
+            ]
+          },
+          "autocomplete_analyzer": {
+            "type": "custom",
+            "tokenizer": "whitespace",
+            "filter": [
+              "lowercase",
+              "nGramFilter"
+            ]
+          }
+        }
+      }
+    }
+  }
+}
