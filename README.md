@@ -1,5 +1,5 @@
 
-### Sources of my presentation for jinkubator talk about elasticsearch for beginners
+### Sources of my presentation for WJUG talk about elasticsearch for beginners
 
 
 To run samples :
@@ -22,3 +22,7 @@ To run samples :
 		
 	in Cerebro and HQ connect to `http://elasticsearch:9200`
 		
+
+To read presentation open:
+	
+	elasticsearch_for_beginners.pdf
